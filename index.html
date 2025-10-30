@@ -5,49 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Okey Puan Hesaplayıcı</title>
 <style>
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f2f2f7; margin:0; padding:0; color:#333; }
-.container { background:white; padding:20px; border-radius:12px; max-width:700px; margin:20px auto; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-h1 { color:#007AFF; text-align:center; font-size:1.8em; margin-bottom:15px;}
+body { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:#f2f2f7; margin:0; padding:0; color:#333;}
+.container { background:white; padding:20px; border-radius:12px; max-width:750px; margin:20px auto; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+h1 { color:#007AFF; text-align:center; margin-bottom:15px;}
 label { font-weight:600; display:block; margin-top:10px;}
-input, select, button { width:100%; padding:12px; margin-top:5px; border-radius:8px; border:1px solid #ccc; font-size:16px; box-sizing:border-box;}
+input, select, button { width:100%; padding:10px; margin-top:5px; border-radius:8px; border:1px solid #ccc; font-size:15px; box-sizing:border-box;}
 button { background:#007AFF; color:white; font-weight:bold; border:none; cursor:pointer; transition:0.2s;}
-button:hover { background:#005BBB; }
-button:disabled { background:#ccc; cursor:not-allowed; }
-
-#puanTablosu { width:100%; border-collapse:collapse; margin-top:15px; font-size:0.95em;}
-#puanTablosu th, #puanTablosu td { border:1px solid #ddd; padding:8px; text-align:center;}
+button:hover { background:#005BBB;}
+button:disabled { background:#ccc; cursor:not-allowed;}
+#puanTablosu { width:100%; border-collapse:collapse; margin-top:15px;}
+#puanTablosu th,#puanTablosu td { border:1px solid #ddd; padding:8px; text-align:center;}
 #puanTablosu th { background:#007AFF; color:white;}
-tfoot td { font-weight:bold; background:#eee; }
-.plus { color:#1AAE55; font-weight:bold; }
-.minus { color:#FF3B30; font-weight:bold; }
-
-#kazanan { background:#e5f8e0; border:1px solid #b3e5a3; padding:15px; border-radius:12px; margin-top:15px; display:none; text-align:center; font-size:1.2em; font-weight:bold; color:#1AAE55; opacity:0; transform: scale(0.8); transition: all 0.5s ease;}
-#kazanan.show { display:block; opacity:1; transform: scale(1); }
-
-#resetBtn { background:#FF3B30; margin-top:8px; }
+tfoot td { font-weight:bold; background:#eee;}
+.plus { color:#1AAE55; font-weight:bold;}
+.minus { color:#FF3B30; font-weight:bold;}
+#kazanan { background:#e5f8e0; border:1px solid #b3e5a3; padding:15px; border-radius:12px; margin-top:15px; display:none; text-align:center; font-size:1.2em; font-weight:bold; color:#1AAE55; opacity:0; transform:scale(0.8); transition:all 0.5s ease;}
+#kazanan.show { display:block; opacity:1; transform:scale(1);}
+#resetBtn { background:#FF3B30; margin-top:8px;}
 .deleteBtn { background:#FF3B30; color:white; border:none; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:0.8em;}
-.deleteBtn:hover { background:#cc0000; }
-
+.deleteBtn:hover { background:#cc0000;}
 .siyah { background-color:#d9d9d9;}
 .kirmizi { background-color:#ffd6d6;}
 .mavi { background-color:#d6e0ff;}
 .sari { background-color:#fff6d6;}
+#kimseBitmediAlani { display:none; margin-top:10px;}
 </style>
 </head>
 <body>
-
 <div class="container">
   <h1>🧮 Okey Puan Hesaplayıcı</h1>
 
-  <label>Takım İsimlerini Girin:</label>
-  <input type="text" id="takimAIsim" placeholder="Takım A ismi" value="Takım A">
-  <input type="text" id="takimBIsim" placeholder="Takım B ismi" value="Takım B">
+  <label>Takım İsimleri:</label>
+  <input type="text" id="takimAIsim" value="Takım A">
+  <input type="text" id="takimBIsim" value="Takım B">
   <button onclick="takimGuncelle()">Takımları Güncelle</button>
 
   <label>Biten Takım:</label>
-  <select id="bitenTakim">
+  <select id="bitenTakim" onchange="bitenDegisti()">
     <option value="A">Takım A</option>
     <option value="B">Takım B</option>
+    <option value="yok">Kimse Bitmedi</option>
   </select>
 
   <label>Okey Rengi:</label>
@@ -58,40 +55,37 @@ tfoot td { font-weight:bold; background:#eee; }
     <option value="sari">Sarı</option>
   </select>
 
-  <label>Karşı Takımın Per Olmayan Taş Toplamı:</label>
-  <input type="number" id="perOlmayanToplam" placeholder="örn. 45">
+  <div id="tekliAlan">
+    <label>Karşı Takımın Per Olmayan Taş Toplamı:</label>
+    <input type="number" id="perOlmayanToplam" placeholder="örn. 45">
+  </div>
 
-  <label>Biten taraf okey atarak / çifte mi bitti?</label>
-  <select id="okeyVeyaCift">
+  <div id="kimseBitmediAlani">
+    <label id="lblA">Takım A Per Olmayan Taş Toplamı:</label>
+    <input type="number" id="tasA" placeholder="örn. 45">
+    <label id="lblB">Takım B Per Olmayan Taş Toplamı:</label>
+    <input type="number" id="tasB" placeholder="örn. 60">
+  </div>
+
+  <label>Biten taraf okey ile mi bitti?</label>
+  <select id="okeyBitis">
     <option value="hayir">Hayır</option>
-    <option value="okey">Okey Atarak</option>
-    <option value="cift">Çifte Giderek</option>
+    <option value="okey">Evet (Okey ile)</option>
   </select>
 
-  <button id="elEkleBtn" onclick="elEkle()">Eli Ekle</button>
+  <button onclick="elEkle()">Eli Ekle</button>
   <button id="resetBtn" onclick="sifirla()">Yeni Parti</button>
 
   <table id="puanTablosu">
     <thead>
       <tr>
-        <th>El</th>
-        <th>Biten</th>
-        <th>Renk</th>
-        <th>Per</th>
-        <th>Durum</th>
-        <th id="baslikA">A Puan</th>
-        <th id="baslikB">B Puan</th>
-        <th>🗑️</th>
+        <th>El</th><th>Biten</th><th>Renk</th><th>Durum</th>
+        <th id="baslikA">A Puan</th><th id="baslikB">B Puan</th><th>🗑️</th>
       </tr>
     </thead>
     <tbody></tbody>
     <tfoot>
-      <tr>
-        <td colspan="5">Toplam</td>
-        <td id="toplamA">0</td>
-        <td id="toplamB">0</td>
-        <td></td>
-      </tr>
+      <tr><td colspan="4">Toplam</td><td id="toplamA">0</td><td id="toplamB">0</td><td></td></tr>
     </tfoot>
   </table>
 
@@ -99,112 +93,96 @@ tfoot td { font-weight:bold; background:#eee; }
 </div>
 
 <script>
-let elSayisi = 0;
-let toplamA = 0;
-let toplamB = 0;
-const maxEl = 11;
+let elSayisi=0, toplamA=0, toplamB=0;
+const maxEl=11;
 
-const renkDegerleri = {
-  siyah: { dusus:50, carpim:5, yanik:500 },
-  kirmizi: { dusus:40, carpim:4, yanik:400 },
-  mavi: { dusus:30, carpim:3, yanik:300 },
-  sari: { dusus:20, carpim:2, yanik:200 }
-};
+const renkKatsayi={siyah:5,kirmizi:4,mavi:3,sari:2};
 
 function takimGuncelle(){
-  const isimA = document.getElementById("takimAIsim").value || "Takım A";
-  const isimB = document.getElementById("takimBIsim").value || "Takım B";
-  const select = document.getElementById("bitenTakim");
-  select.options[0].text = isimA;
-  select.options[1].text = isimB;
-  document.getElementById("baslikA").innerText = isimA + " Puan";
-  document.getElementById("baslikB").innerText = isimB + " Puan";
+  const a=document.getElementById("takimAIsim").value||"Takım A";
+  const b=document.getElementById("takimBIsim").value||"Takım B";
+  const sel=document.getElementById("bitenTakim");
+  sel.options[0].text=a; sel.options[1].text=b;
+  document.getElementById("lblA").innerText=a+" Per Olmayan Taş Toplamı:";
+  document.getElementById("lblB").innerText=b+" Per Olmayan Taş Toplamı:";
+  document.getElementById("baslikA").innerText=a+" Puan";
+  document.getElementById("baslikB").innerText=b+" Puan";
 }
 
-function hesaplaPuan(bitenTakim, okeyRenk, perToplam, okeyVeyaCift){
-  const renk = renkDegerleri[okeyRenk];
-  const yanikMi = perToplam >= 100;
+function bitenDegisti(){
+  const val=document.getElementById("bitenTakim").value;
+  document.getElementById("tekliAlan").style.display=val==="yok"?"none":"block";
+  document.getElementById("kimseBitmediAlani").style.display=val==="yok"?"block":"none";
+}
 
-  let bitenPuan = renk.dusus;
-  let digerPuan = perToplam * renk.carpim;
-
-  if(okeyVeyaCift !== "hayir"){
-    bitenPuan *=2;
-    digerPuan *=2;
+function hesapla(biten, renk, tas, okey){
+  const k=renkKatsayi[renk];
+  if(biten==="yok"){
+    // kimse bitmedi
+    const puanA = tas.a * k;
+    const puanB = tas.b * k;
+    return {a:puanA, b:puanB, durum:"Kimse Bitmedi"};
   }
-
-  if(yanikMi){
-    if(okeyVeyaCift !== "hayir") digerPuan = renk.yanik*2;
-    else digerPuan = renk.yanik;
-  }
-
-  return {bitenPuan, digerPuan, yanikMi};
+  const perToplam = tas;
+  const yanik = perToplam>=100;
+  let bitenDus = 10*k;
+  let digerEkle = perToplam*k;
+  if(okey==="okey"){ bitenDus*=2; digerEkle*=2; }
+  if(yanik){ bitenDus=100*k; digerEkle=100*k; }
+  if(yanik && okey==="okey"){ bitenDus=100*k; digerEkle=200*k; }
+  if(biten==="A") return {a:-bitenDus, b:digerEkle, durum:yanik?(okey==="okey"?"YANIK+OKEY":"YANIK"):(okey==="okey"?"OKEY":"Normal")};
+  else return {a:digerEkle, b:-bitenDus, durum:yanik?(okey==="okey"?"YANIK+OKEY":"YANIK"):(okey==="okey"?"OKEY":"Normal")};
 }
 
 function elEkle(){
-  if(elSayisi >= maxEl){
-    alert("11 el tamamlandı!");
-    return;
+  if(elSayisi>=maxEl){ alert("11 el tamamlandı!"); return; }
+  const biten=document.getElementById("bitenTakim").value;
+  const renk=document.getElementById("okeyRenk").value;
+  const okey=document.getElementById("okeyBitis").value;
+  let sonuc;
+  if(biten==="yok"){
+    const ta=parseInt(document.getElementById("tasA").value);
+    const tb=parseInt(document.getElementById("tasB").value);
+    if(isNaN(ta)||isNaN(tb)){alert("İki takımın taş toplamlarını giriniz!");return;}
+    sonuc=hesapla("yok",renk,{a:ta,b:tb},okey);
+  }else{
+    const per=parseInt(document.getElementById("perOlmayanToplam").value);
+    if(isNaN(per)){alert("Per olmayan taş toplamını giriniz!");return;}
+    sonuc=hesapla(biten,renk,per,okey);
   }
-
-  const bitenTakim = document.getElementById("bitenTakim").value;
-  const okeyRenk = document.getElementById("okeyRenk").value;
-  const perToplam = Number(document.getElementById("perOlmayanToplam").value);
-  const okeyVeyaCift = document.getElementById("okeyVeyaCift").value;
-
-  if(isNaN(perToplam)){
-    alert("Per olmayan taş toplamını gir!");
-    return;
-  }
-
-  const {bitenPuan, digerPuan, yanikMi} = hesaplaPuan(bitenTakim, okeyRenk, perToplam, okeyVeyaCift);
-
-  let elPuanA = bitenTakim === "A" ? -bitenPuan : +digerPuan;
-  let elPuanB = bitenTakim === "B" ? -bitenPuan : +digerPuan;
 
   elSayisi++;
-  toplamA += elPuanA;
-  toplamB += elPuanB;
+  toplamA+=sonuc.a; toplamB+=sonuc.b;
 
-  const tablo = document.querySelector("#puanTablosu tbody");
-  const satir = document.createElement("tr");
-  satir.dataset.elPuanA = elPuanA;
-  satir.dataset.elPuanB = elPuanB;
-
-  satir.className = okeyRenk;
-  satir.innerHTML = `
+  const tbody=document.querySelector("#puanTablosu tbody");
+  const row=document.createElement("tr");
+  row.className=renk;
+  row.dataset.a=sonuc.a; row.dataset.b=sonuc.b;
+  row.innerHTML=`
     <td>${elSayisi}</td>
-    <td>${document.getElementById("bitenTakim").options[document.getElementById("bitenTakim").selectedIndex].text}</td>
-    <td>${okeyRenk.toUpperCase()}</td>
-    <td>${perToplam}</td>
-    <td>${okeyVeyaCift !== "hayir" ? okeyVeyaCift.toUpperCase() : (yanikMi?"YANIK":"Normal")}</td>
-    <td class="${elPuanA>=0?'plus':'minus'}">${elPuanA>0?'+':''}${elPuanA}</td>
-    <td class="${elPuanB>=0?'plus':'minus'}">${elPuanB>0?'+':''}${elPuanB}</td>
-    <td><button class="deleteBtn" onclick="elSil(this)">Sil</button></td>
-  `;
-  tablo.appendChild(satir);
-
-  document.getElementById("toplamA").innerText = toplamA;
-  document.getElementById("toplamB").innerText = toplamB;
-
-  if(elSayisi===maxEl) kazananGoster();
+    <td>${biten==="yok"?"Kimse Bitmedi":document.getElementById("bitenTakim").options[document.getElementById("bitenTakim").selectedIndex].text}</td>
+    <td>${renk.toUpperCase()}</td>
+    <td>${sonuc.durum}</td>
+    <td class="${sonuc.a>=0?'plus':'minus'}">${sonuc.a>0?'+':''}${sonuc.a}</td>
+    <td class="${sonuc.b>=0?'plus':'minus'}">${sonuc.b>0?'+':''}${sonuc.b}</td>
+    <td><button class="deleteBtn" onclick="elSil(this)">Sil</button></td>`;
+  tbody.appendChild(row);
+  document.getElementById("toplamA").innerText=toplamA;
+  document.getElementById("toplamB").innerText=toplamB;
+  if(elSayisi===maxEl) kazanan();
 }
 
 function elSil(btn){
-  const satir = btn.closest("tr");
-  toplamA -= Number(satir.dataset.elPuanA);
-  toplamB -= Number(satir.dataset.elPuanB);
-  satir.remove();
-  elSayisi--;
-  document.getElementById("toplamA").innerText = toplamA;
-  document.getElementById("toplamB").innerText = toplamB;
+  const tr=btn.closest("tr");
+  toplamA-=Number(tr.dataset.a); toplamB-=Number(tr.dataset.b);
+  tr.remove(); elSayisi--;
+  document.getElementById("toplamA").innerText=toplamA;
+  document.getElementById("toplamB").innerText=toplamB;
   document.getElementById("kazanan").classList.remove("show");
 }
 
 function sifirla(){
-  elSayisi=0;
-  toplamA=0;
-  toplamB=0;
+  elSayisi=0; toplamA=0; toplamB=0;
   document.querySelector("#puanTablosu tbody").innerHTML="";
   document.getElementById("toplamA").innerText="0";
   document.getElementById("toplamB").innerText="0";
@@ -212,12 +190,12 @@ function sifirla(){
   document.getElementById("kazanan").innerText="";
 }
 
-function kazananGoster(){
-  const isimA = document.getElementById("takimAIsim").value || "Takım A";
-  const isimB = document.getElementById("takimBIsim").value || "Takım B";
-  const div = document.getElementById("kazanan");
-  if(toplamA>toplamB) div.innerText=`🏆 Kazanan: ${isimB} (${toplamB} - ${toplamA})`;
-  else if(toplamB>toplamA) div.innerText=`🏆 Kazanan: ${isimA} (${toplamA} - ${toplamB})`;
+function kazanan(){
+  const a=document.getElementById("takimAIsim").value||"Takım A";
+  const b=document.getElementById("takimBIsim").value||"Takım B";
+  const div=document.getElementById("kazanan");
+  if(toplamA<toplamB) div.innerText=`🏆 Kazanan: ${a} (${toplamA} - ${toplamB})`;
+  else if(toplamB<toplamA) div.innerText=`🏆 Kazanan: ${b} (${toplamB} - ${toplamA})`;
   else div.innerText=`🤝 Berabere! (${toplamA} - ${toplamB})`;
   div.classList.add("show");
 }
